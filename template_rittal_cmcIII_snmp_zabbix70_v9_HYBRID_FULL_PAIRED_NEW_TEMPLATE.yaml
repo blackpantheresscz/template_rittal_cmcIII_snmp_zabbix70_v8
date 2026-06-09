@@ -1,0 +1,477 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+  - uuid: ed9be2824d6c463b94c60ecdf3771798
+    name: Templates/Environmental
+  templates:
+  - uuid: eeb9b617453e44b7b3c2a331d15559a3
+    template: Template Rittal CMC III SNMP - Hybrid Full Paired Test
+    name: Template Rittal CMC III SNMP - Hybrid Full Paired Test
+    description: 'Rittal CMC III SNMP template test. Uses device-table discovery for
+      readable paired item names like {#DEVALIAS}: Temperature.Value, Access.Status,
+      Handle.Status. This avoids generic variable table names with duplicate labels.
+
+
+      V9 hybrid: keeps clean paired device-name items, and adds raw full variable
+      discovery for *.Value and *.Status to avoid losing data on device types not
+      explicitly modeled.'
+    groups:
+    - name: Templates/Environmental
+    items:
+    - uuid: 93f49055e13542c89fff21b66dc98649
+      name: 'CMC III: Unit status'
+      type: SNMP_AGENT
+      snmp_oid: .1.3.6.1.4.1.2606.7.2.1.0
+      key: rittal.cmc.unit.status
+      delay: 1m
+      history: 30d
+      trends: '0'
+      value_type: UNSIGNED
+      triggers:
+      - uuid: 48e9293c68014bd2aa673ac45589ab07
+        expression: last(/Template Rittal CMC III SNMP - Hybrid Full Paired Test/rittal.cmc.unit.status)<>1
+        name: 'CMC III: Unit status is not OK'
+        priority: HIGH
+    - uuid: f21b57282da240b4b79cfc18f2d0691f
+      name: 'CMC III: Firmware version'
+      type: SNMP_AGENT
+      snmp_oid: .1.3.6.1.4.1.2606.7.2.4.0
+      key: rittal.cmc.unit.firmware
+      delay: 1h
+      history: 30d
+      trends: '0'
+      value_type: CHAR
+    - uuid: 7023d7e71e4e4db988dbc712ec560fde
+      name: 'CMC III: OS version'
+      type: SNMP_AGENT
+      snmp_oid: .1.3.6.1.4.1.2606.7.2.5.0
+      key: rittal.cmc.unit.os
+      delay: 1h
+      history: 30d
+      trends: '0'
+      value_type: CHAR
+    - uuid: d937465f12d34205a1b4731c28509011
+      name: 'CMC III: Serial number'
+      type: SNMP_AGENT
+      snmp_oid: .1.3.6.1.4.1.2606.7.2.6.0
+      key: rittal.cmc.unit.serial
+      delay: 1h
+      history: 30d
+      trends: '0'
+      value_type: CHAR
+    - uuid: b930a673ddc947e2813c9430287abd44
+      name: 'CMC III: URL'
+      type: SNMP_AGENT
+      snmp_oid: .1.3.6.1.4.1.2606.7.2.2.0
+      key: rittal.cmc.unit.url
+      delay: 1h
+      history: 30d
+      trends: '0'
+      value_type: CHAR
+    - uuid: e43a0e2092bd4d34b9e8918e2e342fe1
+      name: 'CMC III: Unit uptime'
+      type: SNMP_AGENT
+      snmp_oid: .1.3.6.1.4.1.2606.7.2.12.0
+      key: rittal.cmc.unit.uptime
+      delay: 5m
+      history: 30d
+      trends: 365d
+      value_type: UNSIGNED
+      units: s
+    discovery_rules:
+    - uuid: 254f916692664afc94cdae84d8a07d4a
+      name: 'CMC III: Device discovery'
+      type: SNMP_AGENT
+      snmp_oid: discovery[{#DEVNAME},.1.3.6.1.4.1.2606.7.4.1.2.1.2,{#DEVALIAS},.1.3.6.1.4.1.2606.7.4.1.2.1.3,{#DEVARTNR},.1.3.6.1.4.1.2606.7.4.1.2.1.7,{#DEVLOCATION},.1.3.6.1.4.1.2606.7.4.1.2.1.8]
+      key: rittal.cmc.device.discovery.paired
+      delay: 1h
+      lifetime: 7d
+      item_prototypes:
+      - uuid: fd6b9ffc2eca47e5b2d9845c7f217909
+        name: 'CMC III: {#DEVALIAS}: Device status'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.1.2.1.6.{#SNMPINDEX}
+        key: rittal.cmc.device.status.paired[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: UNSIGNED
+        trigger_prototypes:
+        - uuid: 45f7caf94d6a49fe8e10e84da8b54fd5
+          expression: last(/Template Rittal CMC III SNMP - Hybrid Full Paired Test/rittal.cmc.device.status.paired[{#SNMPINDEX}])<>2
+          name: 'CMC III: {#DEVALIAS}: Device status is not OK'
+          priority: HIGH
+      - uuid: bbf965893dad40c7b6207112c7816c55
+        name: 'CMC III: {#DEVALIAS}: Device status text'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.1.2.1.19.{#SNMPINDEX}
+        key: rittal.cmc.device.status_text.paired[{#SNMPINDEX}]
+        delay: 5m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+      - uuid: 6bfeb80bd0e84bb09d708eb1bac270ce
+        name: 'CMC III: {#DEVALIAS}: Firmware'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.1.2.1.11.{#SNMPINDEX}
+        key: rittal.cmc.device.firmware.paired[{#SNMPINDEX}]
+        delay: 1h
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+      - uuid: 6bc8936d575a44109c7ff2b848087c78
+        name: 'CMC III: {#DEVALIAS}: Serial'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.1.2.1.13.{#SNMPINDEX}
+        key: rittal.cmc.device.serial.paired[{#SNMPINDEX}]
+        delay: 1h
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+    - uuid: 54be9b1ce1ca4107a94e150c68a8c3da
+      name: 'CMC III: Temperature sensor discovery'
+      type: SNMP_AGENT
+      snmp_oid: discovery[{#DEVNAME},.1.3.6.1.4.1.2606.7.4.1.2.1.2,{#DEVALIAS},.1.3.6.1.4.1.2606.7.4.1.2.1.3,{#DEVARTNR},.1.3.6.1.4.1.2606.7.4.1.2.1.7,{#DEVLOCATION},.1.3.6.1.4.1.2606.7.4.1.2.1.8]
+      key: rittal.cmc.tmp.discovery.paired
+      delay: 1h
+      lifetime: 7d
+      filter:
+        evaltype: AND
+        conditions:
+        - macro: '{#DEVNAME}'
+          value: ^CMCIII-TMP$
+          operator: MATCHES_REGEX
+          formulaid: A
+      item_prototypes:
+      - uuid: a7d8c4b9911948129f7882b7b59e75f0
+        name: 'CMC III: {#DEVALIAS}: Temperature.Value'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}.2
+        key: rittal.cmc.tmp.temperature.value[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: 365d
+        value_type: FLOAT
+        units: degree C
+        preprocessing:
+        - type: MULTIPLIER
+          parameters:
+          - '0.01'
+      - uuid: 108a5731002d4ea68c809142f603d00d
+        name: 'CMC III: {#DEVALIAS}: Temperature.Status'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.10.{#SNMPINDEX}.9
+        key: rittal.cmc.tmp.temperature.status[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+        trigger_prototypes:
+        - uuid: c48310b539da4f6fb642d1de1d4acc7b
+          expression: last(/Template Rittal CMC III SNMP - Hybrid Full Paired Test/rittal.cmc.tmp.temperature.status[{#SNMPINDEX}])<>"OK"
+          name: 'CMC III: {#DEVALIAS}: Temperature status is not OK'
+          priority: WARNING
+      - uuid: 19b4a5d1701741efbc3a61350aec18c2
+        name: 'CMC III: {#DEVALIAS}: Temperature.HighAlarm'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}.4
+        key: rittal.cmc.tmp.temperature.high_alarm[{#SNMPINDEX}]
+        delay: 10m
+        history: 30d
+        trends: 365d
+        value_type: FLOAT
+        units: degree C
+        preprocessing:
+        - type: MULTIPLIER
+          parameters:
+          - '0.01'
+      - uuid: 27c0fbe79177444c99eb6d508ca2367a
+        name: 'CMC III: {#DEVALIAS}: Temperature.HighWarning'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}.5
+        key: rittal.cmc.tmp.temperature.high_warning[{#SNMPINDEX}]
+        delay: 10m
+        history: 30d
+        trends: 365d
+        value_type: FLOAT
+        units: degree C
+        preprocessing:
+        - type: MULTIPLIER
+          parameters:
+          - '0.01'
+      - uuid: 69960e53988748c48788efa98fcbb5f3
+        name: 'CMC III: {#DEVALIAS}: Temperature.LowWarning'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}.6
+        key: rittal.cmc.tmp.temperature.low_warning[{#SNMPINDEX}]
+        delay: 10m
+        history: 30d
+        trends: 365d
+        value_type: FLOAT
+        units: degree C
+        preprocessing:
+        - type: MULTIPLIER
+          parameters:
+          - '0.01'
+      - uuid: 76e45d3876e549a1b262baad2a672167
+        name: 'CMC III: {#DEVALIAS}: Temperature.LowAlarm'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}.7
+        key: rittal.cmc.tmp.temperature.low_alarm[{#SNMPINDEX}]
+        delay: 10m
+        history: 30d
+        trends: 365d
+        value_type: FLOAT
+        units: degree C
+        preprocessing:
+        - type: MULTIPLIER
+          parameters:
+          - '0.01'
+    - uuid: 01d7aba5c4d9447b88ef3070fa9c3f66
+      name: 'CMC III: Handle/access discovery'
+      type: SNMP_AGENT
+      snmp_oid: discovery[{#DEVNAME},.1.3.6.1.4.1.2606.7.4.1.2.1.2,{#DEVALIAS},.1.3.6.1.4.1.2606.7.4.1.2.1.3,{#DEVARTNR},.1.3.6.1.4.1.2606.7.4.1.2.1.7,{#DEVLOCATION},.1.3.6.1.4.1.2606.7.4.1.2.1.8]
+      key: rittal.cmc.grf2.discovery.paired
+      delay: 1h
+      lifetime: 7d
+      filter:
+        evaltype: AND
+        conditions:
+        - macro: '{#DEVNAME}'
+          value: ^CMCIII-GRF2$
+          operator: MATCHES_REGEX
+          formulaid: A
+      item_prototypes:
+      - uuid: 85197c8b12d444048ac154983f5b509d
+        name: 'CMC III: {#DEVALIAS}: Access.Value'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}.3
+        key: rittal.cmc.grf2.access.value[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: UNSIGNED
+      - uuid: 6a6cfe4025054023a971c35271dcc3aa
+        name: 'CMC III: {#DEVALIAS}: Access.Status'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.10.{#SNMPINDEX}.6
+        key: rittal.cmc.grf2.access.status[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+      - uuid: 0909fd01d18446baa50be24d89d56362
+        name: 'CMC III: {#DEVALIAS}: Handle.Value'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}.10
+        key: rittal.cmc.grf2.handle.value[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: UNSIGNED
+      - uuid: 49a33bcab91c4b0484711c4cebc7692c
+        name: 'CMC III: {#DEVALIAS}: Handle.Status'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.10.{#SNMPINDEX}.12
+        key: rittal.cmc.grf2.handle.status[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+      - uuid: f5edd54ee2d3430c925a7e902df359ec
+        name: 'CMC III: {#DEVALIAS}: KeyPad.Status'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.10.{#SNMPINDEX}.18
+        key: rittal.cmc.grf2.keypad.status[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+    - uuid: fbee05dc3cb340d5bca3a669cb0b4957
+      name: 'CMC III: PU system variable discovery'
+      type: SNMP_AGENT
+      snmp_oid: discovery[{#DEVNAME},.1.3.6.1.4.1.2606.7.4.1.2.1.2,{#DEVALIAS},.1.3.6.1.4.1.2606.7.4.1.2.1.3,{#DEVARTNR},.1.3.6.1.4.1.2606.7.4.1.2.1.7,{#DEVLOCATION},.1.3.6.1.4.1.2606.7.4.1.2.1.8]
+      key: rittal.cmc.pu.discovery.paired
+      delay: 1h
+      lifetime: 7d
+      filter:
+        evaltype: AND
+        conditions:
+        - macro: '{#DEVNAME}'
+          value: ^CMCIII-PU$
+          operator: MATCHES_REGEX
+          formulaid: A
+      item_prototypes:
+      - uuid: 6db1672524b5481f9f2e131d71a79af8
+        name: 'CMC III: {#DEVALIAS}: Temperature.Value'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}.54
+        key: rittal.cmc.pu.system.temperature.value[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: 365d
+        value_type: FLOAT
+        units: degree C
+        preprocessing:
+        - type: MULTIPLIER
+          parameters:
+          - '0.01'
+      - uuid: 023eeee049954276b531e8c2fb1399fe
+        name: 'CMC III: {#DEVALIAS}: Temperature.Status'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.10.{#SNMPINDEX}.61
+        key: rittal.cmc.pu.system.temperature.status[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+      - uuid: e9344464dce545bf8323407ecf3f3080
+        name: 'CMC III: {#DEVALIAS}: Supply 24V.Value'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}.64
+        key: rittal.cmc.pu.supply24.value[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: 365d
+        value_type: FLOAT
+        units: V
+        preprocessing:
+        - type: MULTIPLIER
+          parameters:
+          - '0.001'
+      - uuid: af46dd165dc24d4cbe2b98727346280f
+        name: 'CMC III: {#DEVALIAS}: Supply 24V.Status'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.10.{#SNMPINDEX}.70
+        key: rittal.cmc.pu.supply24.status[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+      - uuid: 3176bbf5ceef4b359ce8fca7827e407e
+        name: 'CMC III: {#DEVALIAS}: Supply 5V0.Value'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}.73
+        key: rittal.cmc.pu.supply5.value[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: 365d
+        value_type: FLOAT
+        units: V
+        preprocessing:
+        - type: MULTIPLIER
+          parameters:
+          - '0.001'
+      - uuid: 2752af5d2bda4facb5253d660e83efad
+        name: 'CMC III: {#DEVALIAS}: Supply 5V0.Status'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.10.{#SNMPINDEX}.79
+        key: rittal.cmc.pu.supply5.status[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+      - uuid: 96032af8412746389625c1f32e745f5e
+        name: 'CMC III: {#DEVALIAS}: Supply 3V3.Value'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}.82
+        key: rittal.cmc.pu.supply33.value[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: 365d
+        value_type: FLOAT
+        units: V
+        preprocessing:
+        - type: MULTIPLIER
+          parameters:
+          - '0.001'
+      - uuid: 872faff945e74c2581fa355d0802e3c1
+        name: 'CMC III: {#DEVALIAS}: Supply 3V3.Status'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.10.{#SNMPINDEX}.88
+        key: rittal.cmc.pu.supply33.status[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+      - uuid: 9d8b52525d50426cb5b78f904a27f6a8
+        name: 'CMC III: {#DEVALIAS}: Login.Status'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.10.{#SNMPINDEX}.110
+        key: rittal.cmc.pu.login.status[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+      - uuid: 878d69b934424c0491d8409ddc3c4a95
+        name: 'CMC III: {#DEVALIAS}: Webcam.Status'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.10.{#SNMPINDEX}.104
+        key: rittal.cmc.pu.webcam.status[{#SNMPINDEX}]
+        delay: 5m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+    - uuid: 09dd642b1bfc41249b94aa0ee9223a4a
+      name: 'CMC III RAW: Numeric variable discovery - fallback'
+      type: SNMP_AGENT
+      snmp_oid: discovery[{#VARNAME},.1.3.6.1.4.1.2606.7.4.2.2.1.3,{#VARUNIT},.1.3.6.1.4.1.2606.7.4.2.2.1.5,{#VARSCALE},.1.3.6.1.4.1.2606.7.4.2.2.1.7]
+      key: rittal.cmc.raw.var.numeric.discovery
+      delay: 1h
+      lifetime: 7d
+      filter:
+        evaltype: AND
+        conditions:
+        - macro: '{#VARNAME}'
+          value: ^.*\.Value$
+          operator: MATCHES_REGEX
+          formulaid: A
+      item_prototypes:
+      - uuid: 5d986666512a4054b3e8ad8483f8dc7d
+        name: 'CMC III RAW: [{#SNMPINDEX}] {#VARNAME}'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.11.{#SNMPINDEX}
+        key: rittal.cmc.raw.var.value[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: 365d
+        value_type: FLOAT
+        units: '{#VARUNIT}'
+        preprocessing:
+        - type: JAVASCRIPT
+          parameters:
+          - 'var scale = Number(''{#VARSCALE}'');
+
+            if (scale < 0) return Number(value) / Math.abs(scale);
+
+            return Number(value) * scale;'
+        tags:
+        - tag: component
+          value: rittal_raw
+    - uuid: 0f096beb05aa4ab8905cff4c734b4ffd
+      name: 'CMC III RAW: Status variable discovery - fallback'
+      type: SNMP_AGENT
+      snmp_oid: discovery[{#VARNAME},.1.3.6.1.4.1.2606.7.4.2.2.1.3]
+      key: rittal.cmc.raw.var.status.discovery
+      delay: 1h
+      lifetime: 7d
+      filter:
+        evaltype: AND
+        conditions:
+        - macro: '{#VARNAME}'
+          value: ^.*\.Status$
+          operator: MATCHES_REGEX
+          formulaid: A
+      item_prototypes:
+      - uuid: a3eaa0c0569b4252bd59ecf20675f183
+        name: 'CMC III RAW: [{#SNMPINDEX}] {#VARNAME}'
+        type: SNMP_AGENT
+        snmp_oid: .1.3.6.1.4.1.2606.7.4.2.2.1.10.{#SNMPINDEX}
+        key: rittal.cmc.raw.var.status[{#SNMPINDEX}]
+        delay: 1m
+        history: 30d
+        trends: '0'
+        value_type: CHAR
+        tags:
+        - tag: component
+          value: rittal_raw
